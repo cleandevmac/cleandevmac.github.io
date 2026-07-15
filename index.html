@@ -623,7 +623,11 @@ a { color: inherit; }
 
   <header class="titlebar">
     <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
-    <span class="wtitle">~/dev — <b>cdm</b> — 100×40</span>
+    <!-- Terminal.app's real title format is "<window title> — <command> — <cols>×<rows>",
+         so putting the product name first is authentic AND is the only branding
+         above the fold. The juxtaposition also does half the work of explaining
+         that the command is the product. -->
+    <span class="wtitle">CleanDevMac — <b>cdm</b> — 100×40</span>
     <nav class="tnav" aria-label="Sections">
       <a href="#finds" class="hide-sm">finds</a>
       <a href="#safety" class="hide-sm">safety</a>
@@ -654,10 +658,10 @@ a { color: inherit; }
       </h1>
 
       <p class="lede">
-        <strong>cdm</strong> is a bash CLI that hunts down developer junk on macOS — DerivedData,
-        node_modules, Go and Cargo caches, Electron blobs, dead app leftovers — and shows you every
-        path and every byte <strong>before</strong> it touches anything. Pure bash. No dependencies.
-        No telemetry. MIT.
+        <strong>cdm</strong> is short for <strong>CleanDevMac</strong> — the name you type, and the
+        name of the tool. It is a bash CLI that hunts down developer junk on macOS: DerivedData,
+        node_modules, Go and Cargo caches, Electron blobs, dead app leftovers. It shows you every
+        path and every byte <strong>before</strong> it touches anything.
       </p>
 
       <div class="install">
