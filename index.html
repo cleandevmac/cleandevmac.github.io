@@ -13,7 +13,7 @@
 <meta property="og:image" content="https://cleandevmac.github.io/og.png">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
-<meta property="og:image:alt" content="CleanDevMac — a terminal window showing an example scan: 32.9 GB found across developer caches, project junk, Docker, Electron and orphaned app data, with the install command underneath.">
+<meta property="og:image:alt" content="CleanDevMac — a terminal window showing an example scan: 32.9 GB found across developer caches, project junk, Docker, Electron and orphaned app data, with the run command underneath.">
 <meta property="og:site_name" content="CleanDevMac">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="CleanDevMac — reclaim disk space from developer junk on macOS">
@@ -665,8 +665,11 @@ a { color: inherit; }
       </p>
 
       <div class="install">
+        <!-- Not "install": this page never installs anything. The pipe runs the
+             script and leaves nothing behind, and saying otherwise is both wrong
+             and scarier than the truth. -->
         <div class="install-hd">
-          <span class="eyebrow">Install &amp; run</span>
+          <span class="eyebrow">Run it — nothing gets installed</span>
         </div>
         <div class="cmd">
           <div class="cmd-body">
@@ -674,7 +677,7 @@ a { color: inherit; }
             <code id="install-cmd">curl -sSL https://github.com/cleandevmac/cdm/releases/latest/download/cdm | bash</code>
           </div>
           <button class="copy" type="button" data-done="0"
-                  data-copy="install-cmd" data-what="Install command">Copy</button>
+                  data-copy="install-cmd" data-what="Run command">Copy</button>
         </div>
 
         <div class="cmd-sub">
@@ -1110,8 +1113,9 @@ less cdm &amp;&amp; bash cdm -n</code>
       <div>
         <p class="foot-brand">CleanDevMac<span class="dim">/cdm</span></p>
         <p>
-          Pure bash. Nothing to install but the script itself — it needs <code>curl</code> and
-          <code>bash</code>, both of which you already have. macOS only.
+          Pure bash, and nothing to install — the script runs from the pipe and leaves nothing
+          behind. It needs <code>curl</code> and <code>bash</code>, both of which you already
+          have. macOS only.
         </p>
         <p class="foot-give">
           Free and MIT, and staying that way — no paid tier, nothing held back. If cdm gave you
