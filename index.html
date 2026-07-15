@@ -9,6 +9,16 @@
 <meta property="og:description" content="A bash CLI that itemizes every byte before it removes it. Caches go permanently, git-ignored files and orphaned app data go to the Trash. Zero telemetry. MIT.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://cleandevmac.github.io">
+<!-- og:image must be an absolute URL — crawlers do not resolve relative paths. -->
+<meta property="og:image" content="https://cleandevmac.github.io/og.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="CleanDevMac — a terminal window showing an example scan: 32.9 GB found across developer caches, project junk, Docker, Electron and orphaned app data, with the install command underneath.">
+<meta property="og:site_name" content="CleanDevMac">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CleanDevMac — reclaim disk space from developer junk on macOS">
+<meta name="twitter:description" content="A bash CLI that itemizes every byte before it removes it. Caches go permanently, git-ignored files and orphaned app data go to the Trash. Zero telemetry. MIT.">
+<meta name="twitter:image" content="https://cleandevmac.github.io/og.png">
 <meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#E2E5E1" media="(prefers-color-scheme: light)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%F0%9F%A7%B9%3C/text%3E%3C/svg%3E">
@@ -588,6 +598,11 @@ a { color: inherit; }
 .foot-brand { font-size: clamp(1.25rem, 3.4vw, 1.75rem); font-weight: 700; letter-spacing: -.045em; margin: 0 0 6px; }
 .foot-brand .dim { color: var(--mute); font-weight: 400; }
 .foot p { margin: 0; color: var(--mute); font-size: 12.5px; line-height: 1.7; max-width: 46ch; }
+/* The one ask on the page. --ice, not --ember: ember means "gone for good"
+   everywhere else here, and money is not that signal. */
+.foot-give { margin-top: var(--row) !important; }
+.foot-give a { color: var(--ice); text-decoration: none; border-bottom: 1px solid transparent; }
+.foot-give a:hover { border-bottom-color: var(--ice); }
 .foot-links { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
 .foot-links a { color: var(--mute); text-decoration: none; display: inline-flex; gap: .8ch; }
 .foot-links a:hover { color: var(--ember); }
@@ -1094,12 +1109,18 @@ less cdm &amp;&amp; bash cdm -n</code>
           Pure bash. Nothing to install but the script itself — it needs <code>curl</code> and
           <code>bash</code>, both of which you already have. macOS only.
         </p>
+        <p class="foot-give">
+          Free and MIT, and staying that way — no paid tier, nothing held back. If cdm gave you
+          your disk back, you can
+          <a href="https://www.paypal.com/paypalme/hoangnc" rel="noopener">buy me a coffee&nbsp;↗</a>.
+        </p>
       </div>
       <ul class="foot-links">
         <li><a href="https://github.com/cleandevmac/cdm" rel="noopener">github.com/cleandevmac/cdm</a></li>
         <li><a href="https://github.com/cleandevmac/cdm/blob/main/LICENSE" rel="noopener">MIT License</a></li>
         <li><a href="https://github.com/cleandevmac/cdm/releases/latest" rel="noopener">Latest release</a></li>
         <li><a href="https://github.com/cleandevmac/cdm/tree/main/rules" rel="noopener">rules/</a></li>
+        <li><a href="https://www.paypal.com/paypalme/hoangnc" rel="noopener">Donate</a></li>
       </ul>
     </div>
     <hr class="foot-rule">
