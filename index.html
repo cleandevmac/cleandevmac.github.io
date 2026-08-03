@@ -334,6 +334,8 @@ a { color: inherit; }
 .tui-hd .sp { flex: 1 1 auto; }
 .tui-hd .tot { color: var(--bone); font-weight: 600; letter-spacing: -.01em; }
 .tui-hd .tot b { color: var(--ember); font-weight: 700; }
+.tui-hd .disk { color: var(--mute); }
+.tui-hd .disk b { color: var(--ice); font-weight: 700; }
 
 .list { list-style: none; margin: 0; padding: 4px 0; }
 .list:focus { outline: none; }
@@ -554,6 +556,11 @@ a { color: inherit; }
 .kv dd { margin: 0; color: var(--mute); line-height: 1.5; }
 .kv dd b { color: var(--bone); font-weight: 600; }
 .flags dt { color: var(--ice); }
+.after-hd {
+  margin: 12px 0 8px; padding-top: 10px; border-top: 1px solid var(--rule);
+  font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--mute); font-weight: 600;
+}
 
 .logline {
   margin: calc(var(--row) * 1.25) 0 0; border: 1px solid var(--rule);
@@ -709,7 +716,7 @@ less cdm &amp;&amp; bash cdm -n</code>
             </div>
             <p class="cmd-note">
               Piping a stranger’s script into your shell is a fair thing to refuse. So don’t:
-              <b>cdm is one bash file, about 1,500 lines, with no dependencies</b> — you can read
+              <b>cdm is one bash file, about 2,000 lines, with no dependencies</b> — you can read
               the whole thing before you run it, and <code>-n</code> means the first run it does
               is a rehearsal. <a href="https://github.com/cleandevmac/cdm/blob/main/cdm" rel="noopener">Read the source on GitHub&nbsp;↗</a><span class="caret" aria-hidden="true"></span>
             </p>
@@ -725,6 +732,7 @@ less cdm &amp;&amp; bash cdm -n</code>
           <span class="eyebrow">Example scan</span>
           <span class="sp"></span>
           <span class="tot"><b id="tot-sel">17.0 GB</b> selected of <span id="tot-all">32.9 GB</span> found</span>
+          <span class="disk">disk <b>66 GB</b> free of 228 GB</span>
         </div>
 
         <ul class="list" id="list" role="listbox" tabindex="0" aria-multiselectable="true"
@@ -1008,7 +1016,7 @@ less cdm &amp;&amp; bash cdm -n</code>
       </div>
 
       <ul class="facts">
-        <li><span><b>Zero telemetry.</b> cdm makes no network calls at all, except fetching its own rule JSON. There is no analytics, no phone-home, no opt-out to hunt for, because there is nothing to opt out of.</span></li>
+        <li><span><b>Zero telemetry.</b> cdm makes no network calls at all, except fetching its own rule JSON. There is no analytics, no phone-home, no opt-out to hunt for, because there is nothing to opt out of. The one thing that reaches outward is <code>b</code> on the prompt after a clean, which hands the donate link to your browser — nothing is ever sent.</span></li>
         <li><span><b>--dry-run shows what could be freed and deletes nothing.</b> It’s the recommended first run, and the flag most people never stop using.</span></li>
         <li><span><b>It is not clever.</b> No heuristics guess at your intent. A path is cleaned because a rule you can open and read says so, or it is not cleaned at all.</span></li>
         <li><span><b>Riskier items start unchecked.</b> Maven repo, Playwright browsers, crash logs, project folders, orphaned data — all off until you say otherwise.</span></li>
@@ -1023,7 +1031,8 @@ less cdm &amp;&amp; bash cdm -n</code>
       </h2>
       <p class="lede">
         The interactive run is the whole product: a list you drive with one hand. Categories sorted
-        biggest-first, safe regenerable caches pre-selected, everything else waiting on you.
+        biggest-first, safe regenerable caches pre-selected, everything else waiting on you. It opens
+        with what your disk looks like — total, used, free — and closes with what it looks like now.
       </p>
 
       <div class="cols">
@@ -1036,6 +1045,12 @@ less cdm &amp;&amp; bash cdm -n</code>
             <dt>enter</dt><dd>Show the exact paths and sizes behind a category</dd>
             <dt>c</dt><dd>Clean — prints the itemized plan, confirm with <b>y</b></dd>
             <dt>q</dt><dd>Quit, having changed nothing</dd>
+          </dl>
+          <p class="after-hd">Then, once a clean has run</p>
+          <dl class="kv">
+            <dt>r</dt><dd>Scan again, and see what is left</dd>
+            <dt>b</dt><dd>Open the donate link in your browser — <b>b</b> as in buy me a coffee</dd>
+            <dt>q</dt><dd>Quit — the default, and what every other key does</dd>
           </dl>
         </div>
         <div class="blk">
