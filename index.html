@@ -841,12 +841,14 @@ less cdm &amp;&amp; bash cdm -n</code>
               <li>mypy</li><li>Ruby / Bundler</li><li>Bun</li><li>Deno</li><li>CocoaPods</li>
               <li>SwiftPM</li><li>Composer</li><li>Bazel</li><li>Zig</li><li>kubectl</li>
               <li>AWS</li><li>gcloud</li><li>Azure</li><li>Docker buildx</li><li>JetBrains</li>
-              <li>Playwright</li><li>Homebrew download cache</li>
+              <li>Playwright</li><li>Homebrew download cache</li><li>sccache</li>
+              <li>Android Studio</li><li>emulator snapshots</li><li>unused Android system images</li>
             </ul>
             <p class="grp-note">
               The safe, regenerable ones are <b>pre-selected</b>. The ones that cost real time or
-              bandwidth to rebuild — the <b>Maven repository</b>, <b>Playwright</b> browsers — start
-              unchecked. You opt in, not out.
+              bandwidth to rebuild — the <b>Maven repository</b>, <b>Playwright</b> browsers, Android
+              system images — start unchecked. You opt in, not out. An Android image is only listed
+              when <b>no AVD on your Mac boots from it</b>; the ones your emulators use never show up.
             </p>
           </div>
         </div>
@@ -860,14 +862,15 @@ less cdm &amp;&amp; bash cdm -n</code>
           <div class="grp-body">
             <ul class="toks">
               <li>Electron disk cache</li><li>GPU cache</li><li>code cache</li><li>VS Code</li>
-              <li>Claude</li><li>Slack</li><li>Chrome</li><li>Brave</li><li>Edge</li>
+              <li>Claude</li><li>webview partitions</li><li>Slack</li><li>Chrome</li><li>Brave</li><li>Edge</li>
               <li>Vivaldi</li><li>Arc</li><li>Firefox</li><li>Sentry</li><li>Crashlytics</li>
-              <li>Sparkle</li>
+              <li>Sparkle</li><li>app-updater payloads</li><li>Claude Cowork VM image</li>
             </ul>
             <p class="grp-note">
               Chromium and Firefox caches are handled <b>per profile</b>, so a work profile and a
               personal profile are separate rows. Crash-reporter and telemetry SDK caches are
-              swept out with them.
+              swept out with them. Claude desktop’s ~10&nbsp;GB Cowork VM image is offered too —
+              unchecked, re-downloaded on next use, with your VM session data kept.
             </p>
           </div>
         </div>
@@ -1114,6 +1117,9 @@ less cdm &amp;&amp; bash cdm -n</code>
             <b>method</b> decides the fate — <code>rm</code> for things that regenerate,
             <code>trash</code> for things you might want back. <b>default</b> decides whether it
             arrives pre-selected, and <b>desc</b> is the <i>why</i> the tool prints next to it.
+            An optional <b>procs</b> list names the apps that rewrite those caches while running, so
+            cdm can tell you to quit them first. One special <b>kind</b>, <code>android-images</code>,
+            takes its globs from <code>images</code> and drops any system image an AVD still uses.
             Nothing in a rule file can reach the protected paths. Point cdm at your own set with
             <code>--patterns &lt;dir-or-url&gt;</code> and it will use yours instead.
           </p>
