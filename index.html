@@ -841,7 +841,7 @@ less cdm &amp;&amp; bash cdm -n</code>
               <li>mypy</li><li>Ruby / Bundler</li><li>Bun</li><li>Deno</li><li>CocoaPods</li>
               <li>SwiftPM</li><li>Composer</li><li>Bazel</li><li>Zig</li><li>kubectl</li>
               <li>AWS</li><li>gcloud</li><li>Azure</li><li>Docker buildx</li><li>JetBrains</li>
-              <li>Playwright</li><li>Homebrew download cache</li><li>sccache</li>
+              <li>Playwright</li><li>Homebrew download cache</li><li>PlatformIO download cache</li><li>sccache</li>
               <li>Android Studio</li><li>emulator snapshots</li><li>unused Android system images</li>
             </ul>
             <p class="grp-note">
@@ -905,10 +905,13 @@ less cdm &amp;&amp; bash cdm -n</code>
           <div class="grp-body">
             <ul class="toks">
               <li>stopped containers</li><li>unused images</li><li>build cache</li>
+              <li>buildx builder caches</li>
             </ul>
             <p class="grp-note">
-              Runs <b>system prune -af</b>, and only if you ask for it.
-              <b>Named volumes are never touched</b> — your local Postgres survives.
+              Runs <b>system prune -af</b>, and only if you ask for it. Before that, each buildx
+              builder’s cache — which <b>system prune</b> never reaches — is emptied with
+              <b>buildx prune -af</b>; a stopped builder is started for it and stopped again.
+              <b>Named volumes are never deleted</b> — your local Postgres survives.
             </p>
           </div>
         </div>
@@ -962,7 +965,7 @@ less cdm &amp;&amp; bash cdm -n</code>
             <ul>
               <li><b>Caches</b> — npm, Go, Cargo, pip, Gradle, Homebrew downloads</li>
               <li><b>Build output</b> — DerivedData, dist, target, node_modules</li>
-              <li><b>Docker</b> — stopped containers, unused images, build cache</li>
+              <li><b>Docker</b> — stopped containers, unused images, build caches (buildx builders’ too)</li>
             </ul>
             <p class="why">
               These are deleted permanently, and that is the entire point: they regenerate.
@@ -1007,7 +1010,7 @@ less cdm &amp;&amp; bash cdm -n</code>
             </ul>
             <ul>
               <li><b>App sandboxes</b>, and Apple- or system-owned data</li>
-              <li><b>Docker named volumes</b> — your local Postgres survives</li>
+              <li><b>Docker named volumes</b> — never deleted; your local Postgres survives</li>
             </ul>
             <p class="why">
               No rule can reach these — not one you wrote, not one you pulled in with
@@ -1294,12 +1297,13 @@ less cdm &amp;&amp; bash cdm -n</code>
     docker: {
       safe: false, fate: "delete",
       title: "Docker / Podman",
-      note: "Opt-in. Runs system prune -af. Named volumes and databases are never touched.",
+      note: "Opt-in. Runs buildx prune -af per builder, then system prune -af. Named volumes and databases are never deleted.",
       paths: [
         ["stopped containers (11)", "1.2 GB"],
         ["unused images (23)", "3.4 GB"],
-        ["build cache", "1.5 GB"],
-        ["named volumes (4) — never touched", "—"]
+        ["build cache", "0.6 GB"],
+        ["buildx builder caches (1)", "0.9 GB"],
+        ["named volumes (4) — never deleted", "—"]
       ],
       more: ""
     },
