@@ -847,8 +847,53 @@ less cdm &amp;&amp; bash cdm -n</code>
             <p class="grp-note">
               The safe, regenerable ones are <b>pre-selected</b>. The ones that cost real time or
               bandwidth to rebuild — the <b>Maven repository</b>, <b>Playwright</b> browsers, Android
-              system images — start unchecked. You opt in, not out. An Android image is only listed
-              when <b>no AVD on your Mac boots from it</b>; the ones your emulators use never show up.
+              system images — start unchecked. You opt in, not out. In this group an Android image is
+              only listed when <b>no AVD on your Mac boots from it</b>; one that only long-idle AVDs
+              boot gets its own row in the next group, which names them.
+            </p>
+          </div>
+        </div>
+
+        <div class="grp">
+          <div class="grp-hd">
+            <span class="ico" aria-hidden="true">🔌</span>
+            <h3>Installed SDKs that download again</h3>
+            <span class="tag opt">Opt-in</span>
+          </div>
+          <div class="grp-body">
+            <ul class="toks">
+              <li>PlatformIO platforms &amp; toolchains</li><li>Android NDK</li><li>CMake</li>
+              <li>SDK sources</li><li>older build-tools &amp; platforms</li>
+              <li>idle AVDs’ system images</li><li>extra Rust toolchains</li>
+            </ul>
+            <p class="grp-note">
+              Every row starts <b>unchecked</b> and says how it comes back — the next <b>pio run</b>,
+              Gradle, or Android Studio’s SDK Manager. An emulator image is offered only when
+              <b>no AVD that boots it has run in 60 days</b>, and the row names those AVDs. A Rust
+              toolchain other than your default and stable is removed with
+              <b>rustup toolchain uninstall</b>, never <code>rm</code>, and the row names any repo
+              that pins it. <b>sdkmanager</b>, <b>adb</b>, the emulator and PlatformIO’s own
+              <b>pio</b> are never offered.
+            </p>
+          </div>
+        </div>
+
+        <div class="grp">
+          <div class="grp-hd">
+            <span class="ico" aria-hidden="true">💬</span>
+            <h3>Old Claude Code transcripts</h3>
+            <span class="tag trash">To Trash</span>
+          </div>
+          <div class="grp-body">
+            <ul class="toks">
+              <li>sessions untouched for 30 days</li><li>subagent transcripts</li><li>tool outputs</li>
+            </ul>
+            <p class="grp-note">
+              Unchecked, and only ever to the <b>Trash</b>. Running sessions, auto memory and your
+              settings are never touched. Claude Code ages out its own history after 30 days, except
+              sessions from Claude Desktop and Cowork, which it keeps at any age; cdm prints the key
+              that changes that — <code>"desktopSessionCleanupPeriodDays": 30</code> in
+              <code>~/.claude/settings.json</code> — and never edits the file itself.
             </p>
           </div>
         </div>
@@ -966,6 +1011,7 @@ less cdm &amp;&amp; bash cdm -n</code>
               <li><b>Caches</b> — npm, Go, Cargo, pip, Gradle, Homebrew downloads</li>
               <li><b>Build output</b> — DerivedData, dist, target, node_modules</li>
               <li><b>Docker</b> — stopped containers, unused images, build caches (buildx builders’ too)</li>
+              <li><b>Installed SDK pieces</b>, if you tick them — PlatformIO toolchains, older Android build-tools, idle emulator images, extra Rust toolchains (removed by rustup): downloaded again when a build needs them</li>
             </ul>
             <p class="why">
               These are deleted permanently, and that is the entire point: they regenerate.
@@ -984,6 +1030,7 @@ less cdm &amp;&amp; bash cdm -n</code>
             <ul>
               <li><b>Orphaned app data</b> — Application Support, Caches, Preferences</li>
               <li><b>Git-ignored files</b> — the ones that aren’t named build directories</li>
+              <li><b>Old Claude Code transcripts</b> — sessions untouched for 30 days, if you tick them</li>
             </ul>
             <p class="why">
               Anything cdm had to <em>infer</em> was junk goes to the Trash instead of the void.
@@ -1025,7 +1072,7 @@ less cdm &amp;&amp; bash cdm -n</code>
         <li><span><b>Zero telemetry.</b> cdm makes no network calls at all, except fetching its own rule JSON. There is no analytics, no phone-home, no opt-out to hunt for, because there is nothing to opt out of. The one thing that reaches outward is <code>b</code> on the prompt after a clean, which hands the donate link to your browser — nothing is ever sent.</span></li>
         <li><span><b>--dry-run shows what could be freed and deletes nothing.</b> It’s the recommended first run, and the flag most people never stop using.</span></li>
         <li><span><b>It is not clever.</b> No heuristics guess at your intent. A path is cleaned because a rule you can open and read says so, or it is not cleaned at all.</span></li>
-        <li><span><b>Riskier items start unchecked.</b> Maven repo, Playwright browsers, crash logs, project folders, orphaned data — all off until you say otherwise.</span></li>
+        <li><span><b>Riskier items start unchecked.</b> Maven repo, Playwright browsers, crash logs, installed SDK pieces, old Claude Code transcripts, project folders, orphaned data — all off until you say otherwise.</span></li>
         <li><span><b>Every run is logged</b> to <code>~/.cleandevmac/clean.log</code>. What ran, what went, what it weighed.</span></li>
       </ul>
     </section>
@@ -1121,8 +1168,12 @@ less cdm &amp;&amp; bash cdm -n</code>
             <code>trash</code> for things you might want back. <b>default</b> decides whether it
             arrives pre-selected, and <b>desc</b> is the <i>why</i> the tool prints next to it.
             An optional <b>procs</b> list names the apps that rewrite those caches while running, so
-            cdm can tell you to quit them first. One special <b>kind</b>, <code>android-images</code>,
-            takes its globs from <code>images</code> and drops any system image an AVD still uses.
+            cdm can tell you to quit them first. A few rules set a <b>kind</b> and let the script work
+            out what they offer: <code>android-images</code> drops any system image an AVD still uses,
+            <code>older-versions</code> keeps the newest of each family, <code>rust-toolchains</code>
+            removes through rustup, and <code>claude-transcripts</code> only ever moves to the Trash.
+            They take their globs from <code>images</code> or <code>candidates</code>, never
+            <code>paths</code>, so a cdm too old to know the kind offers nothing.
             Nothing in a rule file can reach the protected paths. Point cdm at your own set with
             <code>--patterns &lt;dir-or-url&gt;</code> and it will use yours instead.
           </p>
