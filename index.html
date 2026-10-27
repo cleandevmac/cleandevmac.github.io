@@ -840,16 +840,19 @@ less cdm &amp;&amp; bash cdm -n</code>
               <li>sbt / Ivy</li><li>Cargo</li><li>pip</li><li>uv</li><li>poetry</li><li>ruff</li>
               <li>mypy</li><li>Ruby / Bundler</li><li>Bun</li><li>Deno</li><li>CocoaPods</li>
               <li>SwiftPM</li><li>Composer</li><li>Bazel</li><li>Zig</li><li>kubectl</li>
-              <li>AWS</li><li>gcloud</li><li>Azure</li><li>Docker buildx</li><li>JetBrains</li>
-              <li>Playwright</li><li>Homebrew download cache</li><li>PlatformIO download cache</li><li>sccache</li>
+              <li>AWS</li><li>gcloud</li><li>Azure</li><li>wrangler</li><li>Docker buildx</li><li>JetBrains</li>
+              <li>Zed language servers</li><li>Playwright</li><li>Homebrew download cache</li><li>PlatformIO download cache</li><li>sccache</li>
               <li>Android Studio</li><li>emulator snapshots</li><li>unused Android system images</li>
+              <li>clang module cache</li><li>Node compile cache</li>
             </ul>
             <p class="grp-note">
               The safe, regenerable ones are <b>pre-selected</b>. The ones that cost real time or
               bandwidth to rebuild — the <b>Maven repository</b>, <b>Playwright</b> browsers, Android
               system images — start unchecked. You opt in, not out. In this group an Android image is
               only listed when <b>no AVD on your Mac boots from it</b>; one that only long-idle AVDs
-              boot gets its own row in the next group, which names them.
+              boot gets its own row in the next group, which names them. Clang’s module cache and
+              Node’s compile cache live in <b>your own temp folders</b> under
+              <code>/private/var/folders</code> — the one place outside your home folder cdm reaches.
             </p>
           </div>
         </div>
@@ -864,7 +867,7 @@ less cdm &amp;&amp; bash cdm -n</code>
             <ul class="toks">
               <li>PlatformIO platforms &amp; toolchains</li><li>Android NDK</li><li>CMake</li>
               <li>SDK sources</li><li>older build-tools &amp; platforms</li>
-              <li>idle AVDs’ system images</li><li>extra Rust toolchains</li>
+              <li>idle AVDs’ system images</li><li>extra Rust toolchains</li><li>Rust offline docs</li>
             </ul>
             <p class="grp-note">
               Every row starts <b>unchecked</b> and says how it comes back — the next <b>pio run</b>,
@@ -872,7 +875,8 @@ less cdm &amp;&amp; bash cdm -n</code>
               <b>no AVD that boots it has run in 60 days</b>, and the row names those AVDs. A Rust
               toolchain other than your default and stable is removed with
               <b>rustup toolchain uninstall</b>, never <code>rm</code>, and the row names any repo
-              that pins it. <b>sdkmanager</b>, <b>adb</b>, the emulator and PlatformIO’s own
+              that pins it. Each toolchain’s offline docs (<b>rust-docs</b>, ~0.9&nbsp;GB apiece) go
+              the same way, through <b>rustup component remove</b>. <b>sdkmanager</b>, <b>adb</b>, the emulator and PlatformIO’s own
               <b>pio</b> are never offered.
             </p>
           </div>
@@ -907,15 +911,21 @@ less cdm &amp;&amp; bash cdm -n</code>
           <div class="grp-body">
             <ul class="toks">
               <li>Electron disk cache</li><li>GPU cache</li><li>code cache</li><li>VS Code</li>
-              <li>Claude</li><li>webview partitions</li><li>Slack</li><li>Chrome</li><li>Brave</li><li>Edge</li>
-              <li>Vivaldi</li><li>Arc</li><li>Firefox</li><li>Sentry</li><li>Crashlytics</li>
-              <li>Sparkle</li><li>app-updater payloads</li><li>Claude Cowork VM image</li>
+              <li>VS Code agent SDK</li><li>Claude</li><li>webview partitions</li><li>Slack</li><li>EasyEDA</li>
+              <li>Chrome</li><li>Brave</li><li>Edge</li><li>Vivaldi</li><li>Arc</li><li>Firefox</li>
+              <li>leftover Chrome copies</li><li>Sentry</li><li>Crashlytics</li><li>Sparkle</li>
+              <li>app-updater payloads</li><li>Claude Cowork VM image</li><li>older Claude Code builds</li>
+              <li>Chrome on-device AI models</li><li>aerial wallpapers</li>
             </ul>
             <p class="grp-note">
               Chromium and Firefox caches are handled <b>per profile</b>, so a work profile and a
               personal profile are separate rows. Crash-reporter and telemetry SDK caches are
-              swept out with them. Claude desktop’s ~10&nbsp;GB Cowork VM image is offered too —
-              unchecked, re-downloaded on next use, with your VM session data kept.
+              swept out with them. At every launch Chrome copies its own app into your temp folder
+              and deletes the copy on a clean exit; a crashed or killed browser — under a test
+              script, say — leaves it behind, and cdm clears those, <b>never one a running browser
+              may use</b>. Opt-in: Claude desktop’s ~10&nbsp;GB Cowork VM image (your VM session data
+              is kept) and the Claude Code builds older than the one it runs, Chrome’s on-device AI
+              models, and the aerial wallpaper videos macOS downloads into every account.
             </p>
           </div>
         </div>
@@ -1008,10 +1018,11 @@ less cdm &amp;&amp; bash cdm -n</code>
           </div>
           <div class="half-body">
             <ul>
-              <li><b>Caches</b> — npm, Go, Cargo, pip, Gradle, Homebrew downloads</li>
+              <li><b>Caches</b> — npm, Go, Cargo, pip, Gradle, clang modules, Homebrew downloads</li>
               <li><b>Build output</b> — DerivedData, dist, target, node_modules</li>
+              <li><b>Leftover Chrome copies</b> — what a crashed or killed browser leaves in your temp folder</li>
               <li><b>Docker</b> — stopped containers, unused images, build caches (buildx builders’ too)</li>
-              <li><b>Installed SDK pieces</b>, if you tick them — PlatformIO toolchains, older Android build-tools, idle emulator images, extra Rust toolchains (removed by rustup): downloaded again when a build needs them</li>
+              <li><b>Installed SDK pieces</b>, if you tick them — PlatformIO toolchains, older Android build-tools, idle emulator images, extra Rust toolchains and Rust’s offline docs (both removed by rustup): downloaded again when a build needs them</li>
             </ul>
             <p class="why">
               These are deleted permanently, and that is the entire point: they regenerate.
@@ -1058,6 +1069,7 @@ less cdm &amp;&amp; bash cdm -n</code>
             <ul>
               <li><b>App sandboxes</b>, and Apple- or system-owned data</li>
               <li><b>Docker named volumes</b> — never deleted; your local Postgres survives</li>
+              <li><b>Anything outside your home folder</b> but what a rule names inside your own temp folders — never another account’s, never the folders themselves</li>
             </ul>
             <p class="why">
               No rule can reach these — not one you wrote, not one you pulled in with
@@ -1171,9 +1183,12 @@ less cdm &amp;&amp; bash cdm -n</code>
             cdm can tell you to quit them first. A few rules set a <b>kind</b> and let the script work
             out what they offer: <code>android-images</code> drops any system image an AVD still uses,
             <code>older-versions</code> keeps the newest of each family, <code>rust-toolchains</code>
-            removes through rustup, and <code>claude-transcripts</code> only ever moves to the Trash.
-            They take their globs from <code>images</code> or <code>candidates</code>, never
-            <code>paths</code>, so a cdm too old to know the kind offers nothing.
+            and <code>rust-docs</code> remove through rustup, <code>code-sign-clones</code> keeps any
+            copy a running browser may use, and <code>claude-transcripts</code> only ever moves to the
+            Trash. They take their globs from <code>images</code> or <code>candidates</code>, never
+            <code>paths</code>, so a cdm too old to know the kind offers nothing. A path may start
+            with <code>@cache/</code>, <code>@temp/</code> or <code>@boot-temp/</code> instead of
+            <code>~/</code> — your own temp folders under <code>/private/var/folders</code>.
             Nothing in a rule file can reach the protected paths. Point cdm at your own set with
             <code>--patterns &lt;dir-or-url&gt;</code> and it will use yours instead.
           </p>
