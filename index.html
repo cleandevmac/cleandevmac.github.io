@@ -979,12 +979,19 @@ less cdm &amp;&amp; bash cdm -n</code>
           </div>
           <div class="grp-body">
             <ul class="toks">
-              <li>Application Support</li><li>Caches</li><li>Preferences</li>
+              <li>Application Support</li><li>Caches</li><li>Preferences</li><li>VS Code</li>
+              <li>Cursor</li><li>Zed</li><li>JetBrains IDEs</li><li>Android Studio</li><li>Docker Desktop</li>
+              <li>OrbStack</li><li>Postman</li><li>Slack</li><li>~50 dev apps</li>
             </ul>
             <p class="grp-note">
               Leftovers whose owning app is gone. The installed-app list is read from
               <b>LaunchServices</b>, so a prefPane, a plugin or a driver is never mistaken for an
-              orphan. Everything here goes to the <b>Trash</b> — if cdm guessed wrong, you put it back.
+              orphan, and an app in the Trash counts as gone. Folders an app keeps under its own name,
+              like VS Code’s <code>~/.vscode</code>, come from <code>orphans.json</code>. Folders a
+              command-line tool also uses (<code>~/.docker</code>, <code>~/.android</code>, …) and
+              Docker Desktop’s VM disk get a separate <b>(optional)</b> row, hidden while a command that
+              uses them is still on your PATH. Everything here goes to the <b>Trash</b> — if cdm guessed
+              wrong, you put it back.
             </p>
           </div>
         </div>
@@ -1039,7 +1046,7 @@ less cdm &amp;&amp; bash cdm -n</code>
           </div>
           <div class="half-body">
             <ul>
-              <li><b>Orphaned app data</b> — Application Support, Caches, Preferences</li>
+              <li><b>Orphaned app data</b> — Application Support, Caches, Preferences, and the folders an app keeps under its own name</li>
               <li><b>Git-ignored files</b> — the ones that aren’t named build directories</li>
               <li><b>Old Claude Code transcripts</b> — sessions untouched for 30 days, if you tick them</li>
             </ul>
@@ -1067,7 +1074,7 @@ less cdm &amp;&amp; bash cdm -n</code>
               <li>iCloud Drive</li>
             </ul>
             <ul>
-              <li><b>App sandboxes</b>, and Apple- or system-owned data</li>
+              <li><b>App sandboxes</b>, and Apple- or system-owned data — except an uninstalled Docker Desktop’s container, which holds its VM disk and is offered only in an unchecked (optional) row</li>
               <li><b>Docker named volumes</b> — never deleted; your local Postgres survives</li>
               <li><b>Anything outside your home folder</b> but what a rule names inside your own temp folders — never another account’s, never the folders themselves</li>
             </ul>
@@ -1084,7 +1091,7 @@ less cdm &amp;&amp; bash cdm -n</code>
         <li><span><b>Zero telemetry.</b> cdm makes no network calls at all, except fetching its own rule JSON. There is no analytics, no phone-home, no opt-out to hunt for, because there is nothing to opt out of. The one thing that reaches outward is <code>b</code> on the prompt after a clean, which hands the donate link to your browser — nothing is ever sent.</span></li>
         <li><span><b>--dry-run shows what could be freed and deletes nothing.</b> It’s the recommended first run, and the flag most people never stop using.</span></li>
         <li><span><b>It is not clever.</b> No heuristics guess at your intent. A path is cleaned because a rule you can open and read says so, or it is not cleaned at all.</span></li>
-        <li><span><b>Riskier items start unchecked.</b> Maven repo, Playwright browsers, crash logs, installed SDK pieces, old Claude Code transcripts, project folders, orphaned data — all off until you say otherwise.</span></li>
+        <li><span><b>Riskier items start unchecked.</b> Maven repo, Playwright browsers, crash logs, installed SDK pieces, old Claude Code transcripts, project folders, orphaned data and its (optional) rows — all off until you say otherwise.</span></li>
         <li><span><b>Every run is logged</b> to <code>~/.cleandevmac/clean.log</code>. What ran, what went, what it weighed.</span></li>
       </ul>
     </section>
@@ -1391,9 +1398,9 @@ less cdm &amp;&amp; bash cdm -n</code>
     orph: {
       safe: false, fate: "trash",
       title: "Orphaned app data",
-      note: "Moved to the Trash, never hard-deleted. Owning apps checked against LaunchServices.",
+      note: "Moved to the Trash, never hard-deleted. Owning apps checked against LaunchServices; an app in the Trash counts as gone.",
       paths: [
-        ["~/Library/Application Support/Postman — owner not installed", "168 MB"],
+        ["~/.vscode — VS Code’s extensions, app not installed", "168 MB"],
         ["~/Library/Caches/com.example.legacy-tool", "121 MB"],
         ["~/Library/Application Support/OldEditor", "93 MB"],
         ["~/Library/Preferences/com.example.retired.plist", "4 KB"]
@@ -1539,7 +1546,7 @@ less cdm &amp;&amp; bash cdm -n</code>
       block("trash", "Move to Trash", "recoverable", groups.trash) +
       '<div class="plan-grp"><div class="hd"><span class="tag opt">Protected</span>' +
         '<span class="note" style="margin:0">never touched, no matter the rule</span></div>' +
-        '<p class="note" style="margin:3px 0 0">~/Documents · ~/Desktop · ~/Downloads · ~/Pictures · ~/.ssh · iCloud Drive · app sandboxes · system data</p></div>' +
+        '<p class="note" style="margin:3px 0 0">~/Documents · ~/Desktop · ~/Downloads · ~/Pictures · ~/.ssh · iCloud Drive · installed apps’ sandboxes · system data</p></div>' +
       '<div class="confirm"><span>Proceed? <b>[y/N]</b></span>' +
         '<button type="button" class="go" data-go="y">y — proceed</button>' +
         '<button type="button" data-go="q">q — cancel</button></div>';
