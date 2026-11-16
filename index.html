@@ -288,7 +288,7 @@ a { color: inherit; }
 }
 :root[data-theme="light"] .copy[data-done="1"] { color: #FFF; }
 
-/* the two subordinate commands: same machinery, dialled down.
+/* the subordinate commands: same machinery, dialled down.
    The safe command used to be inert text while the destructive one got
    the button — the page recommends -n three times, so -n gets a button. */
 .cmd-sub { margin: 14px 0 0; display: grid; gap: 14px; }
@@ -310,6 +310,8 @@ a { color: inherit; }
 }
 .cmd-note b { color: var(--bone); font-weight: 600; }
 .cmd-note a { color: var(--ice); text-underline-offset: 2px; }
+/* a flag spelled out in a note (-s -- --user NAME) wraps as one piece, never at its hyphens */
+.cmd-note code { white-space: nowrap; }
 
 .caret {
   display: inline-block; width: .55em; height: 1em; vertical-align: -.15em;
@@ -704,6 +706,22 @@ a { color: inherit; }
           </div>
 
           <div>
+            <p class="cmd-lbl"><b>Every account on this Mac — needs sudo</b></p>
+            <div class="cmd sm">
+              <div class="cmd-body">
+                <span class="sig" aria-hidden="true">$</span>
+                <code id="sudo-cmd">curl -sSL https://github.com/cleandevmac/cdm/releases/latest/download/cdm | sudo bash</code>
+              </div>
+              <button class="copy" type="button" data-done="0"
+                      data-copy="sudo-cmd" data-what="Every-account command">Copy</button>
+            </div>
+            <p class="cmd-note">
+              One account after another, each scanned and cleaned by <b>its own user, never by root</b>,
+              with the same review and the same <b>y</b>. Add <code>-s -- --user NAME</code> to pick accounts.
+            </p>
+          </div>
+
+          <div>
             <p class="cmd-lbl"><b>Read it first — downloads, doesn’t run</b></p>
             <div class="cmd sm">
               <div class="cmd-body">
@@ -716,7 +734,7 @@ less cdm &amp;&amp; bash cdm -n</code>
             </div>
             <p class="cmd-note">
               Piping a stranger’s script into your shell is a fair thing to refuse. So don’t:
-              <b>cdm is one bash file, about 2,000 lines, with no dependencies</b> — you can read
+              <b>cdm is one bash file, about 3,600 lines, with no dependencies</b> — you can read
               the whole thing before you run it, and <code>-n</code> means the first run it does
               is a rehearsal. <a href="https://github.com/cleandevmac/cdm/blob/main/cdm" rel="noopener">Read the source on GitHub&nbsp;↗</a><span class="caret" aria-hidden="true"></span>
             </p>
@@ -934,7 +952,7 @@ less cdm &amp;&amp; bash cdm -n</code>
           <div class="grp-hd">
             <span class="ico" aria-hidden="true">📦</span>
             <h3>Project junk, per repo</h3>
-            <span class="tag opt">-p</span>
+            <span class="tag opt">Opt-in</span>
           </div>
           <div class="grp-body">
             <ul class="toks">
@@ -943,9 +961,9 @@ less cdm &amp;&amp; bash cdm -n</code>
             </ul>
             <p class="grp-note">
               <b>One git repo, one row.</b> Not a pile of anonymous folder paths — so you clean the
-              three projects you finished in 2023 and leave the one you’re mid-branch on. Off by
-              default behind <b>-p</b>, because scanning <b>$HOME</b> is slow; an interactive run
-              offers it once the cache scan is finished. Build directories are deleted;
+              three projects you finished in 2023 and leave the one you’re mid-branch on. An interactive
+              run always scans your repos, and every row starts unchecked; <b>-y</b> skips them unless
+              you add <b>-p</b>, and never cleans them. Build directories are deleted;
               other git-ignored files go to the Trash.
             </p>
           </div>
@@ -1093,6 +1111,7 @@ less cdm &amp;&amp; bash cdm -n</code>
         <li><span><b>It is not clever.</b> No heuristics guess at your intent. A path is cleaned because a rule you can open and read says so, or it is not cleaned at all.</span></li>
         <li><span><b>Riskier items start unchecked.</b> Maven repo, Playwright browsers, crash logs, installed SDK pieces, old Claude Code transcripts, project folders, orphaned data and its (optional) rows — all off until you say otherwise.</span></li>
         <li><span><b>Every run is logged</b> to <code>~/.cleandevmac/clean.log</code>. What ran, what went, what it weighed.</span></li>
+        <li><span><b>Under sudo, root deletes nothing.</b> Root only stages a copy of cdm and its rules in <code>/private/tmp</code>, then runs it as each account in turn. Each account’s clean is logged in its own <code>clean.log</code>, and its Trash items go to its own Trash.</span></li>
       </ul>
     </section>
 
@@ -1130,7 +1149,8 @@ less cdm &amp;&amp; bash cdm -n</code>
           <dl class="kv flags">
             <dt>-n</dt><dd>Dry run — surfaces what could be freed, deletes nothing</dd>
             <dt>--dry-run</dt><dd>The same thing, spelled out</dd>
-            <dt>-p</dt><dd>Include project junk — scans <b>$HOME</b> for git repos, so it takes a while</dd>
+            <dt>-p</dt><dd>With <b>-y</b>, also scan your git repos and list their junk — <b>-y</b> never cleans it. Interactive runs always scan them</dd>
+            <dt>--user</dt><dd>With <b>sudo</b>: only this account. Repeat it for more; leave it out for every account</dd>
             <dt>--patterns</dt><dd>Point cdm at your own rules — a directory or a URL</dd>
           </dl>
         </div>
@@ -1365,7 +1385,7 @@ less cdm &amp;&amp; bash cdm -n</code>
         ["~/dev/scratch — node_modules, __pycache__", "1.2 GB"],
         ["~/dev/dotfiles — git-ignored files", "196 MB"]
       ],
-      more: "+ 12 more repos · off by default behind -p, because scanning $HOME is slow"
+      more: "+ 12 more repos · every row starts unchecked"
     },
     docker: {
       safe: false, fate: "delete",
